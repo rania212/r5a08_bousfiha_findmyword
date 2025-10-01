@@ -4,6 +4,8 @@ public class Word {
     public Word(String e) {
     }
 
-    public void guess(String b) {
+    public Score guess(String guess) {
+        return new Score(new Letter[]{Letter.INCORRECT});
     }
+
 }

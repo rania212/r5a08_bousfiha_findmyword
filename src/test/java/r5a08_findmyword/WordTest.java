@@ -11,6 +11,13 @@ class WordTest {
         Word word = new Word("E"); // Le mot à déviner fait une lettre
 
         // Act
-                 word.guess("B"); // tentative du joueur
+        Score currentScore = word.guess("B"); // tentative du joueur
+        Letter actual = currentScore.letter(0);
+        Letter expected = Letter.INCORRECT;
+
+
+        // Assert
+        assertEquals(actual, expected);
     }
+    @
 }
