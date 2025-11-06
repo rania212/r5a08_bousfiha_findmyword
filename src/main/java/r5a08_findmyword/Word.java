@@ -1,21 +1,20 @@
 package r5a08_findmyword;
 
 public class Word {
-    private String word; // Le mot à deviner
+    private final String word;
 
     public Word(String correctWord) {
-        this.word = correctWord; // Initialisation du mot
+        this.word = correctWord.toUpperCase();
     }
 
     public Score guess(String attempt) {
-        // Créer un tableau de scores vide
-        Score score = new Score(word);
-
-        // Calcule le score pour chaque lettre de la tentative
-        for (int i = 0; i < word.length(); i++) {
-            score.assess(i, attempt, word); // Comparer lettre par lettre
+        if (attempt == null || attempt.length() != word.length()) {
+            throw new IllegalArgumentException("La tentative doit avoir la même longueur que le mot secret.");
         }
 
-        return score; // Retourner l'objet Score avec les résultats
+        attempt = attempt.toUpperCase();
+        Score score = new Score(word);
+        score.assess(attempt);
+        return score;
     }
 }

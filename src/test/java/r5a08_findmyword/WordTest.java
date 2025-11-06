@@ -1,36 +1,62 @@
 package r5a08_findmyword;
 
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
 
-class WordTest {
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static r5a08_findmyword.Letter.*;
+
+public class WordTest {
+
+    @Test
+    public void should_check_one_incorrect_letter() {
+        // Arrange
+        Word word = new Word("A");
+        // Act
+        Score score = word.guess("E");
+
+        // Assert
+        assertScoreForGuess(score, INCORRECT);
+    }
 
     @Test
     public void should_check_one_correct_letter() {
         // Arrange
-        Word word = new Word("bonr"); // Le mot à deviner est une seule lettre "E"
-
+        Word word = new Word("E");
         // Act
-        Score currentScore = word.guess("bonr"); // Tentative correcte du joueur
-        Letter actual = currentScore.letter(0); // Vérifier le score à la position 0
-        Letter expected = Letter.CORRECT; // On s'attend à un score correct
+        Score score = word.guess("E");
 
         // Assert
-        assertEquals(expected, actual); // Vérification du résultat
+        assertScoreForGuess(score, CORRECT);
     }
 
-
     @Test
-    public void should_check_one_incorrect_letter() {
-
-        // Arrange
-        Word word = new Word("E"); // Le mot à deviner fait une lettre
-
+    void should_check_second_letter_wrong_position() {
+        Word word = new Word("EMT");
         // Act
-        Score score = word.guess("B"); // tentative du joueur
+        Score score = word.guess("GET");
 
         // Assert
-        assertEquals(Letter.INCORRECT, score.letter(0));
+        assertScoreForGuess(score, INCORRECT, PART_CORRECT);
+    }
 
+    @Test
+    void should_check_all_combinaisons_correct() {
+        // Arrange
+        Word word = new Word("EMT");
+
+        // Act
+        Score score = word.guess("GET");
+
+        // Assert
+        assertScoreForGuess(score, PART_CORRECT, INCORRECT, PART_CORRECT);
+    }
+
+    private void assertScoreForGuess(Score score, Letter... expectedScores) {
+        for (int position = 0; position < expectedScores.length; position++) {
+            Letter expected = expectedScores[position];
+            assertThat(score.letter(position))
+                    .as("Position %d", position)
+                    .isEqualTo(expected);
+        }
     }
 }

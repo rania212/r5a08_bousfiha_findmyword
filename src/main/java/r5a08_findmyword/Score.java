@@ -1,25 +1,43 @@
 package r5a08_findmyword;
 
-public class Score {
-    private Letter[] scores; // Tableau des scores pour chaque lettre
+import java.util.ArrayList;
+import java.util.List;
 
-    // Constructeur pour initialiser les scores
-    public Score(String word) {
-        this.scores = new Letter[word.length()]; // Initialisation du tableau de scores
+public class Score {
+    private final String correct;
+    private List<Letter> results = new ArrayList<>();
+    private int position = 0;
+
+    public Score(String correct) {
+        this.correct = correct;
     }
 
-    // La méthode assess qui va comparer la lettre du mot et de la tentative
-    public void assess(int index, String attempt, String word) {
-        // Comparer la lettre de la tentative à l'index avec celle du mot
-        if (attempt.charAt(index) == word.charAt(index)) {
-            scores[index] = Letter.CORRECT; // Lettre correcte
-        } else {
-            scores[index] = Letter.INCORRECT; // Lettre incorrecte
+    public Letter letter(int i) {
+        return results.get(i);
+    }
+
+    public void assess(String attempt) {
+        for (char currentLetter : attempt.toCharArray()) {
+            results.add(scoreForLetter(currentLetter));
+            this.position++;
         }
     }
 
-    // Méthode pour récupérer le score de la lettre à l'index spécifié
-    public Letter letter(int index) {
-        return scores[index]; // Retourne le score à l'index
+    private Letter scoreForLetter(char current) {
+        if (isCorrectLetter(current)) {
+            return Letter.CORRECT;
+        }
+        if (isLetterOccursInWord(current)) {
+            return Letter.PART_CORRECT;
+        }
+        return Letter.INCORRECT;
+    }
+
+    private boolean isLetterOccursInWord(char currentLetter) {
+        return correct.contains(String.valueOf(currentLetter));
+    }
+
+    private boolean isCorrectLetter(char currentLetter) {
+        return correct.charAt(position) == currentLetter;
     }
 }
